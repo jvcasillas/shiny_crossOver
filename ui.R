@@ -22,7 +22,7 @@ shinyUI(pageWithSidebar(
                href="http://www.jvcasillas.com"),
         h5("Source code:"),
         tags$a("Github", 
-               href="https://github.com/jvcasill")
+               href="https://github.com/jvcasill/shiny_crossOver/")
     ),
 
     mainPanel(        
