@@ -42,9 +42,7 @@ shinyServer(function(input, output) {
     })
     
     output$logPlot <- renderPlot({
-        df <- dataFrame()
-        fit <- mod()
-        cop <- cop()
+        df <- dataFrame(); fit <- mod(); cop <- cop()
         
         plot(fit$fitted.values ~ stim, data = df, type = 'n', 
         xaxt = 'n', xlab = "VOT", yaxt = 'n', ylab  = "", 
@@ -57,8 +55,8 @@ shinyServer(function(input, output) {
         abline(h = 0.5, col = 'grey')
         axis(2, at = c(0, 0.5, 1), label = c("big", "50%", "pig"), 
              las = 2)
-        axis(1, at = seq(-60, 60, by = 10), label = seq(-60, 60, 
-                                                        by = 10))
+        axis(1, at = seq(-60, 60, by = 10), 
+             label = seq(-60, 60, by = 10))
     })
 
     output$modelSum <- renderPrint({
