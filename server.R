@@ -6,23 +6,46 @@ crossOver <- function(x) {
 }
 
 shinyServer(function(input, output) {
-
-    output$logPlot <- renderPlot({
-        set.seed(1)
-        
-        x       = rnorm(1300, 1, 3)
-        linpred = input$intercept + x * input$slope
-        prob    = exp(linpred)/(1 + exp(linpred))
-        runis   = runif(1300, 0, 1)
-        y       = ifelse(runis < prob, 1, 0)
     
-        df <- data.frame(prop = y, x = x)
-        df <- df[with(df, order(x)), ]
-        df$stim <- rep(seq(-60, 60, by = 10), each = 100)
+    x <- sort(rnorm(1300, 1, 3))
     
-        fit  <- glm(prop ~ stim, data = df, family = 'binomial')
+    linpred <- reactive({
+        linpred <- input$intercept + x * input$slope
+    })
+    
+    prob <- reactive({
+        linpred <- linpred()
+        prob <- exp(linpred)/(1 + exp(linpred))
+    })  
+    
+    runis <- runif(1300, 0, 1)
+    
+    y <- reactive({
+        prob <- prob()
+        y <- ifelse(runis < prob, 1, 0)
+    })
+    
+    dataFrame <- reactive({
+        y <- y()
+        stim <- rep(seq(-60, 60, by = 10), each = 100)
+        df <- data.frame(prop = y, x = x, stim = stim)
+    })
+    
+    mod <- reactive({
+        df <- dataFrame()
+        fit <- glm(prop ~ stim, data = df, family = 'binomial')
+    })
+    
+    cop <- reactive({
+        fit <- mod()
         cop <- crossOver(fit)
+    })
     
+    output$logPlot <- renderPlot({
+        df <- dataFrame()
+        fit <- mod()
+        cop <- cop()
+        
         plot(fit$fitted.values ~ stim, data = df, type = 'n', 
         xaxt = 'n', xlab = "VOT", yaxt = 'n', ylab  = "", 
         main = "Phoneme boundary for /b/ - /p/ continuum")
@@ -39,27 +62,14 @@ shinyServer(function(input, output) {
     })
 
     output$modelSum <- renderPrint({
-        set.seed(1)
-        x       = rnorm(1300, 1, 3)
-        linpred = input$intercept + x * input$slope
-        prob    = exp(linpred)/(1 + exp(linpred))
-        runis   = runif(1300, 0, 1)
-        y       = ifelse(runis < prob, 1, 0)
-        df <- data.frame(prop = y, x = x)
-        df <- df[with(df, order(x)), ]
-        df$stim <- rep(seq(-60, 60, by = 10), each = 100)
-        fit  <- glm(prop ~ x, data = df, family = 'binomial')
+        fit <- mod()
         stargazer(fit, type = 'html', single.row=TRUE, 
                   dep.var.labels="Proportion 'pig'", 
                   covariate.labels=c("VOT", "Intercept"),
                   omit.stat=c("n", "aic"), ci=TRUE, ci.level=0.95, 
                   align=FALSE)
     })
-    
-    output$space <- renderText({
-        paste0("---")
-    })
-    
+
     output$intEst <- reactive({
         paste0("The intercept is: ", input$intercept, ".")
     })
@@ -69,19 +79,9 @@ shinyServer(function(input, output) {
     })
     
     output$crossOP <- renderText({
-        set.seed(1)
-        x       = rnorm(1300, 1, 3)
-        linpred = input$intercept + x * input$slope
-        prob    = exp(linpred)/(1 + exp(linpred))
-        runis   = runif(1300, 0, 1)
-        y       = ifelse(runis < prob, 1, 0)
-        
-        df <- data.frame(prop = y, x = x)
-        df <- df[with(df, order(x)), ]
-        df$stim <- rep(seq(-60, 60, by = 10), each = 100)
-        
-        fit  <- glm(prop ~ stim, data = df, family = 'binomial')
+        fit <- mod()
         paste0("The perceptual boundary is located at: ", 
                round(crossOver(fit), 2), " (ms).")
     })
+
 })
