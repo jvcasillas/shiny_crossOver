@@ -39,10 +39,8 @@ shinyUI(fluidPage(
             plotOutput("logPlot"),
             tableOutput("modelSum"),
             br(),
-            tableOutput("intEst"),
-            tableOutput("slopeEst"),
-            tableOutput("crossOP"),
-            tableOutput("test")
+            br(),
+            tableOutput("crossOP")
         )
     )
 ))

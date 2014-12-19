@@ -6,7 +6,7 @@ crossOver <- function(x) {
 }
 
 shinyServer(function(input, output) {
-    
+    set.seed(1)
     x <- sort(rnorm(1300, 1, 3))
     
     linpred <- reactive({
@@ -70,14 +70,6 @@ shinyServer(function(input, output) {
                   align=FALSE)
     })
 
-    output$intEst <- reactive({
-        paste0("The intercept is: ", input$intercept, ".")
-    })
-
-    output$slopeEst <- reactive({
-        paste0("The slope is: ", input$slope, ".")
-    })
-    
     output$crossOP <- renderText({
         fit <- mod()
         paste0("The perceptual boundary is located at: ", 
