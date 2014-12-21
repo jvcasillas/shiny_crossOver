@@ -27,20 +27,29 @@ shinyUI(fluidPage(
                         "$$\\textrm{Slope}\\: (\\,\\beta_1VOT\\,)$$", 
                         min = -10, max = 10, value = 2.5, step = 0.5),
             br(),
-            strong("Created by:", 
-                tags$a("Joseph V. Casillas", 
-                href="http://www.jvcasillas.com")),
-            strong("Source code:", 
-                tags$a("Github", 
-                href="https://github.com/jvcasill/shiny_crossOver/"))
+            p(strong("Created by:"), 
+              tags$a("Joseph V. Casillas", href="http://www.jvcasillas.com"),
+              br(), strong("Source code:"), 
+              tags$a("Github", href="https://github.com/jvcasill/shiny_crossOver/"))
         ),
 
         mainPanel(
-            plotOutput("logPlot"),
-            tableOutput("modelSum"),
+            fluidRow(
+                column(8,
+                    div(align = "center",
+                    h4("Perceptual boundary for /b/ - /p/ continuum"),
+                    plotOutput("logPlot"))
+                ),
+                column(4,
+                    div(align = "center",
+                    h4("Model summary"),
+                    br(),br(),br(),
+                    tableOutput("modelSum"))
+                )
+            ),
             br(),
             br(),
-            tableOutput("crossOP")
+            div(align = "center", h4(tableOutput("crossOP")))
         )
     )
 ))

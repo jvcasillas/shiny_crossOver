@@ -46,7 +46,7 @@ shinyServer(function(input, output) {
         
         plot(fit$fitted.values ~ stim, data = df, type = 'n', 
         xaxt = 'n', xlab = "VOT", yaxt = 'n', ylab  = "", 
-        main = "Phoneme boundary for /b/ - /p/ continuum")
+        main = "")
         curve(predict(fit, data.frame(stim = x),type="resp"), 
               add = TRUE, lty = 1, lwd = 1.5, 
               col = rgb(0, 0, 204, 102, maxColorValue = 255)) 
@@ -61,10 +61,10 @@ shinyServer(function(input, output) {
 
     output$modelSum <- renderPrint({
         fit <- mod()
-        stargazer(fit, type = 'html', single.row=TRUE, 
+        stargazer(fit, type = 'html', single.row=FALSE, 
                   dep.var.labels="Proportion 'pig'", 
                   covariate.labels=c("VOT", "Intercept"),
-                  omit.stat=c("n", "aic"), ci=TRUE, ci.level=0.95, 
+                  ci=TRUE, ci.level=0.95, 
                   align=FALSE)
     })
 
