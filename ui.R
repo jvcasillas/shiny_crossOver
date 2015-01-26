@@ -1,6 +1,6 @@
-library(shiny)
+library(shiny); library(shinythemes)
 
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme = shinytheme("united"),
     
     # Application title
     h3("Crossover"),
