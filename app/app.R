@@ -18,7 +18,7 @@ ui <- fluidPage(
   theme = shinytheme("united"),
 
   # Application title
-  h3("Crossover"),
+  titlePanel("Crossover", windowTitle = "Crossover"),
 
   sidebarLayout(
     sidebarPanel(width = 3,
