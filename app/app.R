@@ -3,8 +3,23 @@ library("shiny")
 library("shinythemes")
 library("ggplot2")
 library("stargazer")
+library("bslib")
+
+theme <- bs_theme(
+  # Controls the default grayscale palette
+  bg = "#fff", fg = "#202123",
+  # Controls the accent (e.g., hyperlink, button, etc) colors
+  primary = "#cc0033", secondary = "#48DAC6",
+  base_font = c("Grandstander", "sans-serif"),
+  code_font = c("Courier", "monospace"),
+  heading_font = "'Helvetica Neue', Helvetica, sans-serif",
+  # Can also add lower-level customization
+  "input-border-color" = "#cc0033"
+)
 
 set.seed(1)
+
+# shinylive::export("app", "docs")
 
 # Crossover function
 crossOver <- function(x) {
@@ -15,7 +30,7 @@ crossOver <- function(x) {
 # Creat UI
 ui <- fluidPage(
   # Select theme
-  theme = shinytheme("united"),
+  theme = theme,
 
   # Application title
   titlePanel("Crossover", windowTitle = "Crossover"),
@@ -116,7 +131,7 @@ server <- function(input, output) {
          xaxt = 'n', xlab = "VOT", yaxt = 'n', ylab  = "", 
          main = "")
     curve(predict(fit, data.frame(stim = x),type="resp"), 
-          add = TRUE, lty = 1, lwd = 1.5, 
+          add = TRUE, lty = 1, lwd = 2.5, 
           col = rgb(0, 0, 204, 102, maxColorValue = 255)) 
     abline(v = cop, h = 0.5, 
            col = rgb(150, 0, 204, 102, maxColorValue = 255))
